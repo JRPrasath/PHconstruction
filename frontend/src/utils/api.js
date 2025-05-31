@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_URL = process.env.REACT_APP_API_URL || 'https://phc-backend.cyclic.app';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -23,4 +23,20 @@ api.interceptors.request.use(
   }
 );
 
-export default api; 
+export default api;
+
+export const sendContactForm = async (formData) => {
+  try {
+    const response = await fetch(`${API_URL}/api/contact`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+    return await response.json();
+  } catch (error) {
+    console.error('Error sending contact form:', error);
+    throw error;
+  }
+}; 
