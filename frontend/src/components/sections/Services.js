@@ -16,10 +16,10 @@ const services = [
     features: ['Modern Design', 'Efficient Layout', 'Sustainable Solutions']
   },
   {
-    title: 'Industrial Facilities',
-    description: 'Robust industrial facilities built for efficiency',
-    icon: '🏭',
-    features: ['Heavy-Duty Construction', 'Safety First', 'Optimized Space']
+    title: 'Design Studio',
+    description: 'Creative design solutions to visualize your projects',
+    icon: '🎨',
+    features: ['Architectural Design', '3D Rendering', 'Space Planning']
   },
   {
     title: 'Renovation & Remodeling',
