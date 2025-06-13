@@ -8,9 +8,7 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://phc-construction.vercel.app', 'https://*.vercel.app']
-    : 'http://localhost:3000',
+  origin: ['https://phc-construction.vercel.app', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   exposedHeaders: ['Content-Length', 'X-Foo', 'X-Bar'],
@@ -201,6 +199,11 @@ app.post('/api/contact', async (req, res) => {
 
 // Routes
 app.use('/api/impact', impactRoutes);
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {

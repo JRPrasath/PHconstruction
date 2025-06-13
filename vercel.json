@@ -3,12 +3,7 @@
   "builds": [
     {
       "src": "backend/server.js",
-      "use": "@vercel/node",
-      "config": {
-        "env": {
-          "NODE_ENV": "production"
-        }
-      }
+      "use": "@vercel/node"
     },
     {
       "src": "frontend/package.json",
@@ -21,7 +16,7 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "backend/server.js"
+      "dest": "/backend/server.js"
     },
     {
       "handle": "filesystem"

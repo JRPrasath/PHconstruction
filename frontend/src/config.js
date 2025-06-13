@@ -1,6 +1,6 @@
 const config = {
   apiUrl: process.env.NODE_ENV === 'production' 
-    ? 'https://phc-construction-p1051js87-prasaths-projects-ac64745f.vercel.app'
+    ? 'https://phc-construction.vercel.app'
     : 'http://localhost:5000',
   environment: process.env.NODE_ENV || 'development',
   contactEndpoint: '/api/contact',
