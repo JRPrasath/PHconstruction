@@ -8,7 +8,9 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: ['https://phc-construction.vercel.app', 'http://localhost:3000'],
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://phc-construction.vercel.app', 'https://*.vercel.app']
+    : 'http://localhost:3000',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   exposedHeaders: ['Content-Length', 'X-Foo', 'X-Bar'],
