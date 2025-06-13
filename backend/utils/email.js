@@ -1,28 +1,69 @@
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
-  }
+  },
+  pool: true,
+  maxConnections: 1,
+  maxMessages: 3,
+  rateDelta: 1000,
+  rateLimit: 3,
+  socketTimeout: 10000, // 10 seconds
+  connectionTimeout: 10000, // 10 seconds
+  greetingTimeout: 10000, // 10 seconds
+  debug: true
 });
 
 // Verify transporter configuration
 transporter.verify(function(error, success) {
   if (error) {
     console.error('Email configuration error:', error);
+    console.error('Error details:', {
+      message: error.message,
+      code: error.code,
+      command: error.command,
+      stack: error.stack
+    });
   } else {
     console.log('Email server is ready to send messages');
   }
 });
+
+const sendEmailWithRetry = async (mailOptions, maxRetries = 3) => {
+  let lastError;
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`Attempting to send email (attempt ${attempt}/${maxRetries})...`);
+      const result = await transporter.sendMail(mailOptions);
+      console.log(`Email sent successfully on attempt ${attempt}:`, result.messageId);
+      return result;
+    } catch (error) {
+      lastError = error;
+      console.error(`Failed to send email on attempt ${attempt}:`, error.message);
+      
+      if (attempt < maxRetries) {
+        const delay = Math.min(1000 * Math.pow(2, attempt), 10000); // Exponential backoff
+        console.log(`Waiting ${delay}ms before retry...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  }
+  
+  throw lastError;
+};
 
 const sendContactEmail = async (contactData) => {
   const { name, email, phone, message } = contactData;
 
   // Email to admin
   const adminMailOptions = {
-    from: process.env.EMAIL_FROM,
+    from: `"PaperHouse Construction" <${process.env.EMAIL_USER}>`,
     to: process.env.EMAIL_TO,
     subject: 'New Contact Form Submission - PaperHouse Construction',
     html: `
@@ -39,7 +80,7 @@ const sendContactEmail = async (contactData) => {
 
   // Auto-reply email to user
   const autoReplyOptions = {
-    from: process.env.EMAIL_FROM,
+    from: `"PaperHouse Construction" <${process.env.EMAIL_USER}>`,
     to: email,
     subject: 'Thank you for contacting PaperHouse Construction!',
     html: `
@@ -63,17 +104,17 @@ const sendContactEmail = async (contactData) => {
   try {
     // Log email configuration (without sensitive data)
     console.log('Attempting to send emails with configuration:', {
-      from: process.env.EMAIL_FROM,
+      from: process.env.EMAIL_USER,
       to: process.env.EMAIL_TO,
       user: process.env.EMAIL_USER ? 'Configured' : 'Not configured'
     });
 
-    // Send email to admin
-    const adminResult = await transporter.sendMail(adminMailOptions);
+    // Send email to admin with retry
+    const adminResult = await sendEmailWithRetry(adminMailOptions);
     console.log('Admin email sent successfully:', adminResult.messageId);
     
-    // Send auto-reply to user
-    const autoReplyResult = await transporter.sendMail(autoReplyOptions);
+    // Send auto-reply to user with retry
+    const autoReplyResult = await sendEmailWithRetry(autoReplyOptions);
     console.log('Auto-reply email sent successfully:', autoReplyResult.messageId);
     
     return true;
@@ -82,7 +123,8 @@ const sendContactEmail = async (contactData) => {
     console.error('Error details:', {
       message: error.message,
       code: error.code,
-      command: error.command
+      command: error.command,
+      stack: error.stack
     });
     return false;
   }

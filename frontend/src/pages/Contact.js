@@ -1,28 +1,29 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock } from 'react-icons/fa';
 import axios from 'axios';
 import CompanyMap from '../components/CompanyMap';
+import config from '../config';
 import 'leaflet/dist/leaflet.css';
 
 const contactInfo = [
   {
     icon: <FaPhone className="w-6 h-6" />,
     title: "Phone",
-    details: ["+91 1234567890", "+91 9876543210"],
-    link: "tel:+911234567890"
+    details: ["+91 9790166103"],
+    link: "tel:+919790166103"
   },
   {
     icon: <FaEnvelope className="w-6 h-6" />,
     title: "Email",
-    details: ["info@phc.com", "support@phc.com"],
-    link: "mailto:info@phc.com"
+    details: ["Ph.officials@outlook.com"],
+    link: "mailto:Ph.officials@outlook.com"
   },
   {
     icon: <FaMapMarkerAlt className="w-6 h-6" />,
     title: "Address",
-    details: ["123 Main Street", "Bengaluru, Karnataka 560001"],
-    link: "https://maps.app.goo.gl/iULSJcmRdmBSZJLz5"
+    details: ["54 ANNAMALAI MUTHALIYAR STREET KARAMADAI, Coimbatore"],
+    link: "https://maps.app.goo.gl/nzrzVoNKMcdRoVDL8"
   },
   {
     icon: <FaClock className="w-6 h-6" />,
@@ -125,6 +126,10 @@ const FAQItem = ({ faq, index }) => {
 };
 
 export default function Contact() {
+  const { scrollYProgress } = useScroll();
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -144,26 +149,22 @@ export default function Contact() {
   const validateForm = () => {
     const newErrors = {};
     
-    // Name validation
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required';
     }
 
-    // Email validation
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)) {
       newErrors.email = 'Invalid email address';
     }
 
-    // Phone validation
     if (!formData.phone.trim()) {
       newErrors.phone = 'Phone number is required';
     } else if (!/^[0-9]{10}$/.test(formData.phone.replace(/\D/g, ''))) {
       newErrors.phone = 'Please enter a valid 10-digit phone number';
     }
 
-    // Message validation
     if (!formData.message.trim()) {
       newErrors.message = 'Message is required';
     }
@@ -182,7 +183,14 @@ export default function Contact() {
     setStatus({ loading: true, success: false, error: null });
 
     try {
-      const response = await axios.post('/api/contact', formData);
+      const response = await axios.post(`${config.apiUrl}${config.contactEndpoint}`, formData, {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        withCredentials: true,
+        timeout: 30000 // 30 seconds timeout
+      });
       
       if (response.data.success) {
         setStatus({
@@ -190,7 +198,6 @@ export default function Contact() {
           success: true,
           error: null
         });
-        // Clear form after successful submission
         setFormData({
           name: '',
           email: '',
@@ -203,10 +210,24 @@ export default function Contact() {
         throw new Error(response.data.message || 'Failed to send message');
       }
     } catch (error) {
+      console.error('Contact form error:', error);
+      let errorMessage = 'Failed to send message. Please try again later.';
+      
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        errorMessage = error.response.data.message || error.response.data.error || errorMessage;
+      } else if (error.request) {
+        // The request was made but no response was received
+        errorMessage = 'No response from server. Please check your internet connection.';
+      } else if (error.code === 'ECONNABORTED') {
+        errorMessage = 'Request timed out. Please try again.';
+      }
+      
       setStatus({
         loading: false,
         success: false,
-        error: error.response?.data?.message || 'Failed to send message. Please try again later.'
+        error: errorMessage
       });
     }
   };
@@ -217,7 +238,6 @@ export default function Contact() {
       ...prev,
       [name]: value
     }));
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -229,23 +249,35 @@ export default function Contact() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-gray-800 opacity-90" />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-primary-red opacity-95" />
+        
+        {/* Animated Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-[linear-gradient(45deg,_transparent_25%,_rgba(255,255,255,0.1)_50%,_transparent_75%)] bg-[length:20px_20px]" />
+        </div>
+
+        <motion.div 
+          style={{ opacity, scale }}
+          className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+        >
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="text-center"
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6">
-              Get in Touch
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-8">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">
+                Get in Touch
+              </span>
             </h1>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
               Let's discuss how we can help bring your vision to life
             </p>
           </motion.div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Contact Information */}
@@ -305,6 +337,7 @@ export default function Contact() {
                       <p className="mt-1 text-sm text-red-500">{errors.name}</p>
                     )}
                   </div>
+
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                       Email <span className="text-red-500">*</span>
@@ -324,6 +357,7 @@ export default function Contact() {
                     )}
                   </div>
                 </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
@@ -344,6 +378,7 @@ export default function Contact() {
                       <p className="mt-1 text-sm text-red-500">{errors.phone}</p>
                     )}
                   </div>
+
                   <div>
                     <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
                       Subject
@@ -365,6 +400,7 @@ export default function Contact() {
                     </select>
                   </div>
                 </div>
+
                 <div>
                   <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
                     Message <span className="text-red-500">*</span>
@@ -383,6 +419,7 @@ export default function Contact() {
                     <p className="mt-1 text-sm text-red-500">{errors.message}</p>
                   )}
                 </div>
+
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}

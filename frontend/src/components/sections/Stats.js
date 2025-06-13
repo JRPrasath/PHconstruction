@@ -1,59 +1,52 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { useCountUp } from 'use-count-up';
-
-const stats = [
-  {
-    label: 'Projects Completed',
-    value: 250,
-    suffix: '+',
-    icon: '🏗️'
-  },
-  {
-    label: 'Years Experience',
-    value: 20,
-    suffix: '+',
-    icon: '⭐'
-  },
-  {
-    label: 'Happy Clients',
-    value: 500,
-    suffix: '+',
-    icon: '😊'
-  },
-  {
-    label: 'Team Members',
-    value: 50,
-    suffix: '+',
-    icon: '👥'
-  }
-];
+import axios from 'axios';
+import config from '../../config';
 
 const StatCard = ({ stat }) => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1
   });
+  const controls = useAnimation();
+  const [count, setCount] = useState(0);
 
-  const { value } = useCountUp({
-    isCounting: inView,
-    end: stat.value,
-    duration: 2.5,
-    easing: 'easeOutCubic'
-  });
+  useEffect(() => {
+    if (inView) {
+      controls.start({ opacity: 1, y: 0 });
+      const targetValue = stat.value;
+      let currentValue = 0;
+      const duration = 2000;
+      const steps = 60;
+      const increment = targetValue / steps;
+      const interval = duration / steps;
+
+      const timer = setInterval(() => {
+        currentValue += increment;
+        if (currentValue >= targetValue) {
+          setCount(targetValue);
+          clearInterval(timer);
+        } else {
+          setCount(Math.floor(currentValue));
+        }
+      }, interval);
+
+      return () => clearInterval(timer);
+    }
+  }, [inView, stat.value, controls]);
 
   return (
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 20 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
+      animate={controls}
       transition={{ duration: 0.5 }}
       className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow"
     >
       <div className="text-4xl mb-4">{stat.icon}</div>
       <div className="text-4xl font-bold text-primary-red mb-2">
-        {value}{stat.suffix}
+        {count}{stat.suffix}
       </div>
       <div className="text-gray-600">{stat.label}</div>
     </motion.div>
@@ -61,9 +54,80 @@ const StatCard = ({ stat }) => {
 };
 
 const Stats = () => {
+  const [stats, setStats] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await axios.get(`${config.apiUrl}/api/impact`);
+        const data = response.data;
+        console.log('API Response:', data); // Debug log
+        
+        const formattedStats = [
+          {
+            label: 'Projects Completed',
+            value: Number(data.projectsCompleted),
+            suffix: '+',
+            icon: '🏗️'
+          },
+          {
+            label: 'Ongoing Projects',
+            value: Number(data.ongoingProjects || 15), // Default to 15 if not provided
+            suffix: '+',
+            icon: '🚧'
+          },
+          {
+            label: 'Years Experience',
+            value: Number(data.yearsExperience),
+            suffix: '+',
+            icon: '⏳'
+          },
+          {
+            label: 'Happy Clients',
+            value: Number(data.happyClients),
+            suffix: '+',
+            icon: '😊'
+          }
+        ];
+        
+        console.log('Formatted Stats:', formattedStats); // Debug log
+        setStats(formattedStats);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+        setError('Failed to load statistics');
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="bg-gradient-to-br from-gray-900 to-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-20">
+          <div className="text-center text-white">Loading statistics...</div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="bg-gradient-to-br from-gray-900 to-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-20">
+          <div className="text-center text-red-500">{error}</div>
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-900 to-gray-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="bg-gradient-to-br from-gray-900 to-gray-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

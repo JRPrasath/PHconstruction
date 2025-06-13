@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'https://phc-backend-api.vercel.app';
+const API_URL = '/api';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -27,7 +27,7 @@ export default api;
 
 export const sendContactForm = async (formData) => {
   try {
-    const response = await fetch(`${API_URL}/api/contact`, {
+    const response = await fetch(`${API_URL}/contact`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

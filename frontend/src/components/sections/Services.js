@@ -5,27 +5,27 @@ import { Link } from 'react-router-dom';
 const services = [
   {
     title: 'Residential Construction',
-    description: 'Custom homes and residential projects tailored to your vision',
+    description: 'Building your dream home with precision and quality craftsmanship',
     icon: '🏠',
-    features: ['Custom Design', 'Quality Materials', 'Expert Craftsmanship']
+    features: ['Custom Home Building', 'Quality Materials', 'Expert Craftsmanship', 'Timely Delivery']
   },
   {
-    title: 'Commercial Projects',
-    description: 'Modern commercial spaces that drive business success',
+    title: 'Architectural Design',
+    description: 'Creating innovative and sustainable architectural solutions',
+    icon: '📐',
+    features: ['Custom Designs', '3D Visualization', 'Sustainable Planning', 'Space Optimization']
+  },
+  {
+    title: 'Commercial Construction',
+    description: 'Delivering high-quality commercial spaces that drive business success',
     icon: '🏢',
-    features: ['Modern Design', 'Efficient Layout', 'Sustainable Solutions']
+    features: ['Modern Facilities', 'Efficient Layout', 'Code Compliance', 'Project Management']
   },
   {
-    title: 'Design Studio',
-    description: 'Creative design solutions to visualize your projects',
-    icon: '🎨',
-    features: ['Architectural Design', '3D Rendering', 'Space Planning']
-  },
-  {
-    title: 'Renovation & Remodeling',
-    description: 'Transform your existing space into something extraordinary',
+    title: 'All type of Renovation',
+    description: 'Transforming existing spaces into modern, functional environments',
     icon: '🔨',
-    features: ['Modern Updates', 'Structural Integrity', 'Value Addition']
+    features: ['Structural Updates', 'Modern Amenities', 'Quality Finishes', 'Value Enhancement']
   }
 ];
 
@@ -43,8 +43,8 @@ const cardVariants = {
 
 export default function Services() {
   return (
-    <section className="py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -131,7 +131,7 @@ export default function Services() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="text-center mt-12"
+          className="text-center mt-8"
         >
           <Link
             to="/services"
