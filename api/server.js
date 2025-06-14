@@ -121,4 +121,12 @@ app.use((err, req, res, next) => {
 });
 
 // Export the Express API
-module.exports = app; 
+module.exports = app;
+
+// Start the server if this file is run directly
+if (require.main === module) {
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
+} 

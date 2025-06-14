@@ -68,25 +68,25 @@ const Stats = () => {
         const formattedStats = [
           {
             label: 'Projects Completed',
-            value: Number(data.projectsCompleted) || 250,
+            value: Number(data.projectsCompleted),
             suffix: '+',
             icon: '🏗️'
           },
           {
             label: 'Ongoing Projects',
-            value: Number(data.ongoingProjects) || 15,
+            value: Number(data.ongoingProjects || 15), // Default to 15 if not provided
             suffix: '+',
             icon: '🚧'
           },
           {
             label: 'Years Experience',
-            value: Number(data.yearsExperience) || 20,
+            value: Number(data.yearsExperience),
             suffix: '+',
             icon: '⏳'
           },
           {
             label: 'Happy Clients',
-            value: Number(data.happyClients) || 500,
+            value: Number(data.happyClients),
             suffix: '+',
             icon: '😊'
           }
@@ -97,35 +97,7 @@ const Stats = () => {
         setLoading(false);
       } catch (error) {
         console.error('Error fetching stats:', error);
-        // Use default values if API fails
-        const defaultStats = [
-          {
-            label: 'Projects Completed',
-            value: 250,
-            suffix: '+',
-            icon: '🏗️'
-          },
-          {
-            label: 'Ongoing Projects',
-            value: 15,
-            suffix: '+',
-            icon: '🚧'
-          },
-          {
-            label: 'Years Experience',
-            value: 20,
-            suffix: '+',
-            icon: '⏳'
-          },
-          {
-            label: 'Happy Clients',
-            value: 500,
-            suffix: '+',
-            icon: '😊'
-          }
-        ];
-        setStats(defaultStats);
-        setError('Using default statistics');
+        setError('Failed to load statistics');
         setLoading(false);
       }
     };
@@ -143,14 +115,19 @@ const Stats = () => {
     );
   }
 
+  if (error) {
+    return (
+      <section className="bg-gradient-to-br from-gray-900 to-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-20">
+          <div className="text-center text-red-500">{error}</div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="bg-gradient-to-br from-gray-900 to-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-20">
-        {error && (
-          <div className="text-center text-yellow-400 mb-8">
-            {error}
-          </div>
-        )}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -167,14 +144,8 @@ const Stats = () => {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {stats.map((stat, index) => (
-            <div key={index} className="text-center">
-              <div className="text-4xl mb-2">{stat.icon}</div>
-              <div className="text-4xl font-bold text-white mb-2">
-                {stat.value}{stat.suffix}
-              </div>
-              <div className="text-gray-400">{stat.label}</div>
-            </div>
+          {stats.map((stat) => (
+            <StatCard key={stat.label} stat={stat} />
           ))}
         </div>
       </div>

@@ -1,7 +1,5 @@
 const config = {
-  apiUrl: process.env.NODE_ENV === 'production' 
-    ? 'https://phc-construction.vercel.app'
-    : 'http://localhost:5000',
+  apiUrl: process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000', // Empty string for production means same origin
   environment: process.env.NODE_ENV || 'development',
   contactEndpoint: '/api/contact',
   impactEndpoint: '/api/impact',
