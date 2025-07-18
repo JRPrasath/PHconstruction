@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence, useAnimation } from 'framer-motion';
+import { motion, AnimatePresence, useAnimation, useScroll, useTransform } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 
 // Enhanced gallery data with more details
@@ -175,6 +175,9 @@ const GalleryItem = ({ item }) => {
 const Gallery = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [visibleItems] = useState(galleryData.length);
+  const { scrollYProgress } = useScroll();
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
 
   const filteredItems = galleryData
     .filter(item => selectedCategory === 'all' || item.category === selectedCategory);
@@ -182,26 +185,35 @@ const Gallery = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-br from-gray-900 to-gray-800">
-        <div className="absolute inset-0 bg-black/50"></div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-4xl md:text-5xl font-bold text-white mb-6"
-          >
-            Our Project Gallery
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-xl text-gray-300 max-w-3xl mx-auto"
-          >
-            Explore our portfolio of successful construction projects
-          </motion.p>
+      <section className="relative py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-primary-red opacity-95" />
+        
+        {/* Animated Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-[linear-gradient(45deg,_transparent_25%,_rgba(255,255,255,0.1)_50%,_transparent_75%)] bg-[length:20px_20px]" />
         </div>
+
+        <motion.div 
+          style={{ opacity, scale }}
+          className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center"
+          >
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-8">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">
+                Our Gallery
+              </span>
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            Explore our portfolio of successful construction projects
+            </p>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* Gallery Section */}

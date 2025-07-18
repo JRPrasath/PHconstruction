@@ -465,29 +465,14 @@ export default function Services() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <motion.section 
-        className="relative py-20 overflow-hidden"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        <motion.div 
-          className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-primary-red opacity-95"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-        />
+      <section className="relative py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-primary-red opacity-95" />
         
         {/* Animated Background Pattern */}
-        <motion.div 
-          className="absolute inset-0 opacity-10"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.1 }}
-          transition={{ duration: 1, delay: 0.5 }}
-        >
+        <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent" />
           <div className="absolute inset-0 bg-[linear-gradient(45deg,_transparent_25%,_rgba(255,255,255,0.1)_50%,_transparent_75%)] bg-[length:20px_20px]" />
-        </motion.div>
+        </div>
 
         <motion.div 
           style={{ opacity, scale }}
@@ -499,27 +484,17 @@ export default function Services() {
             transition={{ duration: 0.8 }}
             className="text-center"
           >
-            <motion.h1 
-              className="text-4xl sm:text-5xl font-bold text-white mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-8">
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">
                 Our Services
               </span>
-            </motion.h1>
-            <motion.p 
-              className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
-              Comprehensive construction solutions tailored to your unique needs
-            </motion.p>
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              Comprehensive construction solutions tailored to your needs
+            </p>
           </motion.div>
         </motion.div>
-      </motion.section>
+      </section>
 
       {/* Category Filter */}
       <motion.section 

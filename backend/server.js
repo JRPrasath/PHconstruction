@@ -33,7 +33,7 @@ app.use((req, res, next) => {
 });
 
 // Validate environment variables
-const requiredEnvVars = ['EMAIL_USER', 'EMAIL_PASS', 'EMAIL_TO'];
+const requiredEnvVars = ['EMAIL_USER', 'EMAIL_PASS', 'EMAIL_TO', 'ADMIN_EMAIL'];
 const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
 
 if (missingEnvVars.length > 0) {
@@ -42,11 +42,9 @@ if (missingEnvVars.length > 0) {
   process.exit(1);
 }
 
-// Create a transporter for sending emails with timeout
+// Create a transporter for sending emails with timeout settings
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
-  secure: false,
+  service: 'gmail',
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
@@ -54,9 +52,11 @@ const transporter = nodemailer.createTransport({
   tls: {
     rejectUnauthorized: false
   },
-  connectionTimeout: 10000, // 10 seconds
-  greetingTimeout: 10000,
-  socketTimeout: 10000
+  connectionTimeout: 30000, // Increased to 30 seconds
+  greetingTimeout: 30000,
+  socketTimeout: 30000,
+  debug: true, // Enable debug logging
+  logger: true // Enable logger
 });
 
 // Test endpoint to verify email configuration
@@ -87,46 +87,57 @@ app.get('/api/test-email', async (req, res) => {
   }
 });
 
-// Verify email configuration
+// Verify email configuration with retry logic
+const verifyEmailConfig = async (retries = 3) => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      await new Promise((resolve, reject) => {
 transporter.verify(function(error, success) {
   if (error) {
-    console.error('Email configuration error:', error);
+            console.error(`Email verification attempt ${i + 1} failed:`, error);
+            reject(error);
   } else {
     console.log('Email server is ready to send messages');
+            resolve(success);
+          }
+        });
+      });
+      return true;
+    } catch (error) {
+      if (i === retries - 1) {
+        console.error('All email verification attempts failed:', error);
+        return false;
+      }
+      console.log(`Retrying email verification in 5 seconds... (Attempt ${i + 2}/${retries})`);
+      await new Promise(resolve => setTimeout(resolve, 5000));
+    }
+  }
+};
+
+// Call verifyEmailConfig when server starts
+verifyEmailConfig().then(success => {
+  if (!success) {
+    console.error('Warning: Email server verification failed. Email functionality may not work properly.');
   }
 });
 
 // Contact form endpoint
 app.post('/api/contact', async (req, res) => {
-  console.log('Received contact form submission:', {
-    body: req.body,
-    headers: req.headers
-  });
-
   const { name, email, phone, subject, message } = req.body;
 
   // Validate required fields
   if (!name || !email || !subject || !message) {
-    console.log('Missing required fields:', { name, email, subject, message });
     return res.status(400).json({
       success: false,
       message: 'Please fill in all required fields'
     });
   }
 
-  // Log environment variables (without sensitive data)
-  console.log('Email configuration:', {
-    user: process.env.EMAIL_USER ? 'Configured' : 'Not configured',
-    to: process.env.EMAIL_TO ? 'Configured' : 'Not configured',
-    pass: process.env.EMAIL_PASS ? 'Configured' : 'Not configured'
-  });
-
   try {
     // Send email to admin
-    console.log('Attempting to send admin email...');
-    const adminEmailResult = await transporter.sendMail({
+    await transporter.sendMail({
       from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_TO,
+      to: process.env.ADMIN_EMAIL,
       subject: `New Contact Form Submission: ${subject}`,
       html: `
         <h2>New Contact Form Submission</h2>
@@ -138,11 +149,14 @@ app.post('/api/contact', async (req, res) => {
         <p>${message}</p>
       `
     });
-    console.log('Admin email sent successfully:', adminEmailResult.messageId);
 
-    // Send auto-reply to the user
-    console.log('Attempting to send auto-reply email...');
-    const autoReplyResult = await transporter.sendMail({
+    // Send auto-reply to the user with retry logic
+    let retryCount = 0;
+    const maxRetries = 3;
+    
+    while (retryCount < maxRetries) {
+      try {
+        await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
       subject: 'Thank you for contacting PHC Construction',
@@ -159,40 +173,29 @@ app.post('/api/contact', async (req, res) => {
         <p>PHC Construction Team</p>
       `
     });
-    console.log('Auto-reply email sent successfully:', autoReplyResult.messageId);
+        break; // If successful, break the retry loop
+      } catch (error) {
+        retryCount++;
+        if (retryCount === maxRetries) {
+          console.error('Failed to send auto-reply after', maxRetries, 'attempts:', error);
+          // Don't throw error here, as admin email was sent successfully
+        } else {
+          console.log(`Retry ${retryCount} for auto-reply email...`);
+          await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds before retry
+        }
+      }
+    }
 
-    console.log('All emails sent successfully');
-    res.json({ success: true, message: 'Message sent successfully' });
+    res.json({ 
+      success: true, 
+      message: 'Message sent successfully',
+      autoReplySent: retryCount < maxRetries
+    });
   } catch (error) {
     console.error('Error sending email:', error);
-    console.error('Error details:', {
-      message: error.message,
-      code: error.code,
-      command: error.command,
-      stack: error.stack
-    });
-    
-    // Check for specific error types
-    if (error.code === 'EAUTH') {
-      return res.status(500).json({
-        success: false,
-        message: 'Email authentication failed. Please check your email configuration.',
-        error: error.message
-      });
-    }
-    
-    if (error.code === 'ETIMEDOUT') {
-      return res.status(500).json({
-        success: false,
-        message: 'Email server connection timed out. Please try again later.',
-        error: error.message
-      });
-    }
-
     res.status(500).json({
       success: false,
-      message: 'Failed to send message. Please try again later.',
-      error: error.message
+      message: 'Failed to send message. Please try again later.'
     });
   }
 });
