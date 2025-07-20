@@ -1,0 +1,15 @@
+{
+  "name": "phc-new",
+  "version": "1.0.0",
+  "description": "A modern, responsive website for PaperHouse Construction company built with React and Node.js.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nodemailer": "^7.0.5"
+  }
+}
