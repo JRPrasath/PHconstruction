@@ -14,7 +14,7 @@ const services = [
       "Sustainable planning",
       "Space optimization"
     ],
-    image: "/images/services/architectural.png",
+    image: process.env.PUBLIC_URL + "/images/services/architectural.png",
     category: "design",
     longDescription: "Our architectural design team brings creativity and technical expertise to every project, ensuring sustainable and innovative solutions that stand the test of time.",
     featured: true
@@ -29,7 +29,7 @@ const services = [
       "Expert craftsmanship",
       "Timely delivery"
     ],
-    image: "/images/services/residential.png",
+    image: process.env.PUBLIC_URL + "/images/services/residential.png",
     category: "construction",
     longDescription: "Transform your dream home into reality with our expert residential construction services. We combine innovative design with superior craftsmanship to create spaces that exceed expectations.",
     featured: true
@@ -44,7 +44,7 @@ const services = [
       "Code compliance",
       "Project management"
     ],
-    image: "/images/services/commercial.png",
+    image: process.env.PUBLIC_URL + "/images/services/commercial.png",
     category: "construction",
     longDescription: "From office buildings to retail spaces, we deliver commercial construction projects that combine functionality with aesthetic excellence.",
     featured: true
@@ -59,7 +59,7 @@ const services = [
       "Quality finishes",
       "Value enhancement"
     ],
-    image: "/images/services/renovation.png",
+    image: process.env.PUBLIC_URL + "/images/services/renovation.png",
     category: "renovation",
     longDescription: "Breathe new life into your existing spaces with our comprehensive renovation services, combining modern aesthetics with structural integrity.",
     featured: true
@@ -74,7 +74,7 @@ const services = [
       "Color schemes",
       "Furniture design"
     ],
-    image: "/images/services/interior.png",
+    image: process.env.PUBLIC_URL + "/images/services/interior.png",
     category: "design",
     longDescription: "Our interior design services transform spaces into beautiful, functional environments that reflect your style and enhance your quality of life.",
     featured: false
@@ -89,7 +89,7 @@ const services = [
       "Quality control",
       "Timeline management"
     ],
-    image: "/images/services/consulting.png",
+    image: process.env.PUBLIC_URL + "/images/services/consulting.png",
     category: "consulting",
     longDescription: "Navigate your construction project with confidence through our expert consulting services, ensuring every aspect is meticulously planned and executed.",
     featured: false
@@ -468,7 +468,8 @@ export default function Services() {
       <Helmet>
         <title>Services | PaperHouse Construction</title>
         <meta name="description" content="Discover the range of construction and renovation services offered by PaperHouse Construction." />
-        <link rel="canonical" href="https://yourdomain.com/services" />
+        <link rel="canonical" href="https://jrprasath.github.io/PHconstruction/services" />
+        <meta property="og:url" content="https://jrprasath.github.io/PHconstruction/services" />
       </Helmet>
       <div className="min-h-screen bg-white">
         {/* Hero Section */}

@@ -8,7 +8,8 @@ export default function NotFound() {
       <Helmet>
         <title>404 Not Found | PaperHouse Construction</title>
         <meta name="description" content="Page not found on PaperHouse Construction." />
-        <link rel="canonical" href="https://yourdomain.com/404" />
+        <link rel="canonical" href="https://jrprasath.github.io/PHconstruction/404" />
+        <meta property="og:url" content="https://jrprasath.github.io/PHconstruction/404" />
       </Helmet>
       <div className="flex min-h-screen flex-col items-center justify-center bg-white px-6 py-24 sm:py-32 lg:px-8">
         <div className="text-center">

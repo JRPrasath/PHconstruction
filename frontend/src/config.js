@@ -1,8 +1,8 @@
 const config = {
-  apiUrl: process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000', // Empty string for production means same origin
+  apiUrl: process.env.NODE_ENV === 'production' ? '/.netlify/functions' : 'http://localhost:5000',
   environment: process.env.NODE_ENV || 'development',
-  contactEndpoint: '/api/contact',
-  impactEndpoint: '/api/impact',
+  contactEndpoint: '/contact',
+  impactEndpoint: '/impact',
   // Add other configuration variables as needed
 };
 

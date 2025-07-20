@@ -8,14 +8,14 @@ const testimonials = [
     author: "Sarah Johnson",
     role: "CEO",
     company: "Tech Solutions Inc.",
-    image: "/images/testimonials/sarah.png",
+    image: process.env.PUBLIC_URL + "/images/testimonials/sarah.png",
     rating: 5
   },
   {
     quote: "I've been working with PHC for over a year now, and the results have been remarkable. Their comprehensive health programs and dedicated support have transformed my lifestyle.",
     author: "Michael Chen",
     role: "Fitness Enthusiast",
-    image: "/images/testimonials/michael.png",
+    image: process.env.PUBLIC_URL + "/images/testimonials/michael.png",
     rating: 5
   },
   {
@@ -23,7 +23,7 @@ const testimonials = [
     author: "Emily Rodriguez",
     role: "Community Leader",
     company: "Healthy Living Initiative",
-    image: "/images/testimonials/emily.png",
+    image: process.env.PUBLIC_URL + "/images/testimonials/emily.png",
     rating: 5
   }
 ];

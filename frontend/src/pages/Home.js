@@ -43,7 +43,8 @@ export default function Home() {
       <Helmet>
         <title>Home | PaperHouse Construction</title>
         <meta name="description" content="Welcome to PaperHouse Construction, your trusted partner in construction excellence." />
-        <link rel="canonical" href="https://yourdomain.com/" />
+        <link rel="canonical" href="https://jrprasath.github.io/PHconstruction/" />
+        <meta property="og:url" content="https://jrprasath.github.io/PHconstruction/" />
       </Helmet>
       <div className="min-h-screen bg-white">
         {/* Hero Section */}

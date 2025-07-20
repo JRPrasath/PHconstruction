@@ -50,7 +50,8 @@ const AdminImpact = () => {
       <Helmet>
         <title>Admin Impact | PaperHouse Construction</title>
         <meta name="description" content="Admin impact page for PaperHouse Construction." />
-        <link rel="canonical" href="https://yourdomain.com/admin/impact" />
+        <link rel="canonical" href="https://jrprasath.github.io/PHconstruction/admin/impact" />
+        <meta property="og:url" content="https://jrprasath.github.io/PHconstruction/admin/impact" />
       </Helmet>
       <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">

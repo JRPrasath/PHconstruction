@@ -69,7 +69,8 @@ export default function About() {
       <Helmet>
         <title>About | PaperHouse Construction</title>
         <meta name="description" content="Learn more about PaperHouse Construction, our mission, and our team." />
-        <link rel="canonical" href="https://yourdomain.com/about" />
+        <link rel="canonical" href="https://jrprasath.github.io/PHconstruction/about" />
+        <meta property="og:url" content="https://jrprasath.github.io/PHconstruction/about" />
       </Helmet>
       <div className="min-h-screen bg-white">
         {/* Hero Section */}
@@ -141,7 +142,7 @@ export default function About() {
               >
                 <div className="aspect-w-16 aspect-h-9 rounded-2xl overflow-hidden shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-500">
                   <img
-                    src="/images/about/mission.png"
+                    src={process.env.PUBLIC_URL + '/images/about/mission.png'}
                     alt="Our Mission"
                     className="object-cover w-full h-full transform group-hover:scale-110 transition-transform duration-700"
                   />

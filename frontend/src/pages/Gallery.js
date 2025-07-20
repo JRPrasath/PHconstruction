@@ -9,7 +9,7 @@ const galleryData = [
     id: 1,
     title: "Modern Residential Complex",
     category: "residential",
-    image: "/images/gallery/residential-1.jpg",
+    image: process.env.PUBLIC_URL + "/images/gallery/residential-1.jpg",
     description: "A contemporary residential complex featuring sustainable design and modern amenities.",
     location: "Downtown Area",
     year: "2023",
@@ -21,7 +21,7 @@ const galleryData = [
     id: 2,
     title: "Commercial Office Building",
     category: "commercial",
-    image: "/images/gallery/commercial-1.jpg",
+    image: process.env.PUBLIC_URL + "/images/gallery/commercial-1.jpg",
     description: "State-of-the-art office building with innovative workspace solutions.",
     location: "Business District",
     year: "2023",
@@ -33,7 +33,7 @@ const galleryData = [
     id: 3,
     title: "Luxury Villa Project",
     category: "residential",
-    image: "/images/gallery/residential-2.jpg",
+    image: process.env.PUBLIC_URL + "/images/gallery/residential-2.jpg",
     description: "Elegant villa design combining luxury and comfort.",
     location: "Uptown",
     year: "2022",
@@ -45,7 +45,7 @@ const galleryData = [
     id: 4,
     title: "Shopping Mall Renovation",
     category: "commercial",
-    image: "/images/gallery/commercial-2.jpg",
+    image: process.env.PUBLIC_URL + "/images/gallery/commercial-2.jpg",
     description: "Complete renovation of a shopping mall with modern retail spaces.",
     location: "City Center",
     year: "2022",
@@ -57,7 +57,7 @@ const galleryData = [
     id: 5,
     title: "Smart Home Project",
     category: "residential",
-    image: "/images/gallery/residential-3.jpg",
+    image: process.env.PUBLIC_URL + "/images/gallery/residential-3.jpg",
     description: "Integration of smart technology in residential construction.",
     location: "Suburban Area",
     year: "2023",
@@ -69,7 +69,7 @@ const galleryData = [
     id: 6,
     title: "Modern Apartment Complex",
     category: "residential",
-    image: "/images/gallery/residential-4.jpg",
+    image: process.env.PUBLIC_URL + "/images/gallery/residential-4.jpg",
     description: "Contemporary apartment complex with premium amenities.",
     location: "City Center",
     year: "2023",
@@ -81,7 +81,7 @@ const galleryData = [
     id: 7,
     title: "Corporate Office Park",
     category: "commercial",
-    image: "/images/gallery/commercial-3.jpg",
+    image: process.env.PUBLIC_URL + "/images/gallery/commercial-3.jpg",
     description: "Multi-building office park with sustainable design.",
     location: "Business District",
     year: "2023",
@@ -93,7 +93,7 @@ const galleryData = [
     id: 8,
     title: "Luxury Condominium",
     category: "residential",
-    image: "/images/gallery/residential-5.jpg",
+    image: process.env.PUBLIC_URL + "/images/gallery/residential-5.jpg",
     description: "High-end condominium with panoramic views.",
     location: "Waterfront",
     year: "2023",
@@ -105,7 +105,7 @@ const galleryData = [
     id: 9,
     title: "Retail Plaza",
     category: "commercial",
-    image: "/images/gallery/commercial-4.jpg",
+    image: process.env.PUBLIC_URL + "/images/gallery/commercial-4.jpg",
     description: "Modern retail plaza with mixed-use spaces.",
     location: "Shopping District",
     year: "2023",
@@ -188,7 +188,8 @@ const Gallery = () => {
       <Helmet>
         <title>Gallery | PaperHouse Construction</title>
         <meta name="description" content="View our gallery of completed construction and renovation projects." />
-        <link rel="canonical" href="https://yourdomain.com/gallery" />
+        <link rel="canonical" href="https://jrprasath.github.io/PHconstruction/gallery" />
+        <meta property="og:url" content="https://jrprasath.github.io/PHconstruction/gallery" />
       </Helmet>
       <div className="min-h-screen bg-gray-50">
         {/* Hero Section */}
