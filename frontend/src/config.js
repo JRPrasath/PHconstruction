@@ -1,5 +1,5 @@
 const config = {
-  apiUrl: process.env.NODE_ENV === 'production' ? '/.netlify/functions' : 'http://localhost:5000',
+  apiUrl: process.env.NODE_ENV === 'production' ? 'https://phdesignhouse.netlify.app/.netlify/functions' : 'http://localhost:5000',
   environment: process.env.NODE_ENV || 'development',
   contactEndpoint: '/contact',
   impactEndpoint: '/impact',

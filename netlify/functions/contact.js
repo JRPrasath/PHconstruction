@@ -1,9 +1,24 @@
 const nodemailer = require('nodemailer');
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type',
+};
+
 exports.handler = async function(event, context) {
+  if (event.httpMethod === 'OPTIONS') {
+    // Handle CORS preflight
+    return {
+      statusCode: 200,
+      headers: corsHeaders,
+      body: 'OK',
+    };
+  }
+
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
+      headers: corsHeaders,
       body: 'Method Not Allowed',
     };
   }
@@ -14,6 +29,7 @@ exports.handler = async function(event, context) {
   if (!name || !email || !subject || !message) {
     return {
       statusCode: 400,
+      headers: corsHeaders,
       body: JSON.stringify({ success: false, message: 'Please fill in all required fields' })
     };
   }
@@ -68,12 +84,14 @@ exports.handler = async function(event, context) {
 
     return {
       statusCode: 200,
+      headers: corsHeaders,
       body: JSON.stringify({ success: true, message: 'Message sent successfully' })
     };
   } catch (error) {
     console.error('Error sending email:', error);
     return {
       statusCode: 500,
+      headers: corsHeaders,
       body: JSON.stringify({ success: false, message: 'Failed to send message. Please try again later.' })
     };
   }
