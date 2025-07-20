@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/PHconstruction/static/css/main.cb0044f3.css",
+    "main.js": "/PHconstruction/static/js/main.71567d7e.js",
+    "static/media/logo.png": "/PHconstruction/static/media/logo.8269355464094fa5884a.png",
+    "index.html": "/PHconstruction/index.html",
+    "main.cb0044f3.css.map": "/PHconstruction/static/css/main.cb0044f3.css.map",
+    "main.71567d7e.js.map": "/PHconstruction/static/js/main.71567d7e.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.cb0044f3.css",
+    "static/js/main.71567d7e.js"
+  ]
+}
