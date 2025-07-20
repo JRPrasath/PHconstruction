@@ -10,6 +10,7 @@ import Gallery from './pages/Gallery';
 import Contact from './pages/Contact';
 import NotFound from './pages/NotFound';
 import AdminImpact from './pages/AdminImpact';
+import { Helmet } from 'react-helmet';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -26,25 +27,31 @@ const ScrollToTop = () => {
 
 function App() {
   return (
-    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-      <ScrollToTop />
-      <div className="flex flex-col min-h-screen">
-        <Navbar />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/gallery" element={<Gallery />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/admin/impact" element={<AdminImpact />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </main>
-        <Footer />
-        <Toaster position="top-right" />
-      </div>
-    </Router>
+    <>
+      <Helmet>
+        <title>PaperHouse Construction</title>
+        <meta name="description" content="Your trusted partner in construction and renovation" />
+      </Helmet>
+      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <ScrollToTop />
+        <div className="flex flex-col min-h-screen">
+          <Navbar />
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/gallery" element={<Gallery />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/admin/impact" element={<AdminImpact />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+          <Footer />
+          <Toaster position="top-right" />
+        </div>
+      </Router>
+    </>
   );
 }
 
